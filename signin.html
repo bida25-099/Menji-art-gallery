@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    </head>
+    <body>
+        <header>
+            <nav class="navbar navbar-expand-Ig navbar-dark bg-dark">
+                <div class="container">
+                    <a class="navbar-brand" href="index.html">Introduction</a>
+                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+                    <div class="collapse navbar-collapse" id="navbarNav">
+                        <ul class=" navbar-nav">
+                            <li class="nav-item">
+                                <a class="nav-link" href="index.html">Home</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="about.html">About</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="viewing.html">Art viewing</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="contact.html">Contact</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="signin.html">Art request</a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </nav>
+        </header>
+        <section class="container my-5">
+     <h2 class="mb-4">Request an Art Piece</h2>
+
+     <form id="artRequestForm" class="row g-3" novalidate>
+     <!-- Name (required) -->
+     <div class="col-md-6">
+      <label for="reqName" class="form-label">Your Name <span style="color:#d00">*</span></label>
+      <input type="text" id="reqName" name="name" class="form-control" placeholder="Enter your full name" required />
+      <div class="invalid-feedback">Please enter your name.</div>
+     </div>
+
+     <!-- Email (optional, but useful if you want to follow up) -->
+     <div class="col-md-6">
+      <label for="reqEmail" class="form-label">Email (optional)</label>
+      <input type="email" id="reqEmail" name="email" class="form-control" placeholder="you@example.com" />
+      <div class="invalid-feedback">Please enter a valid email (or leave blank).</div>
+     </div>
+
+     <!-- Choose artwork -->
+     <div class="col-md-12">
+      <label for="artSelect" class="form-label">Choose an art piece</label>
+      <select id="artSelect" name="art" class="form-select">
+        <!-- Use the exact image paths you already have on the page.
+             I included examples from your screenshot; replace or extend as needed. -->
+        <option value="images/2bf27277cf4e2655b559b67d943c5e8b.jpg" selected>Simple posing girl</option>
+        <option value="images/22339064c4b837ee9c1dfeefab1d7f2.jpg">Lady smelling the flowers</option>
+        <option value="images/35806acec38016cac997d7df8830c1.jpg">Man saying thanks and showing gratitude</option>
+        <option value="images/98c088daf5e3fe60e1867f2bc9fbdf4.jpg">Teenage girl returning home</option>
+        <option value="images/2f52cadc5371f5fff4a0a8cc9fa60312.jpg">Women holding out their hand</option>
+      </select>
+      <div class="form-text">Tip: You can add/remove options here as you add more images.</div>
+     </div>
+
+     <!-- Preview -->
+     <div class="col-md-12">
+      <label class="form-label">Preview</label>
+      <div style="border:1px solid #ddd; border-radius:8px; padding:12px;">
+        <img id="previewImg" src="images/2bf27277cf4e2655b559b67d943c5e8b.jpg" alt="Selected art preview" style="display: block;">
+        <label for="reqNotes" class="form-label">Notes (optional)</label>
+      <textarea id="reqNotes" name="notes" class="form-control" rows="3" placeholder="Anything we should know about your request?"></textarea>
+     </div>
+
+     <!-- Submit -->
+     <div class="col-12">
+      <button type="submit" class="btn btn-primary">Submit Request</button>
+    </div>
+
+    <!-- Success/Result Message -->
+    <div id="resultMsg" class="col-12 mt-3" style="display: block"></div>
+  </form>
+</section>
+
+<!-- Minimal JS to handle validation, preview, and showing a confirmation -->
+<script>
+  (function () {
+    const form = document.getElementById('artRequestForm');
+    const nameInput = document.getElementById('reqName');
+    const emailInput = document.getElementById('reqEmail');
+    const select = document.getElementById('artSelect');
+    const preview = document.getElementById('previewImg');
+    const result = document.getElementById('resultMsg');
+
+    // Update preview when a different art piece is selected
+    select.addEventListener('change', function () {
+      preview.src = this.value;
+    });
+
+    // Simple client-side validation + confirmation message
+    form.addEventListener('submit', function (e) {
+      e.preventDefault();
+
+      // Custom validity for name (required)
+      if (!nameInput.value.trim()) {
+        nameInput.classList.add('is-invalid');
+        nameInput.focus();
+        return;
+      } else {
+        nameInput.classList.remove('is-invalid');
+      }
+
+      // If email is filled, check validity (browser handles pattern)
+      if (emailInput.value && !emailInput.checkValidity()) {
+        emailInput.classList.add('is-invalid');
+        emailInput.focus();
+        return;
+      } else {
+        emailInput.classList.remove('is-invalid');
+      }
+
+      const chosenArt = select.options[select.selectedIndex].text;
+      const name = nameInput.value.trim();
+      const email = emailInput.value.trim();
+      const notes = document.getElementById('reqNotes').value.trim();
+
+      // Show a friendly confirmation (no backend)
+      result.style.display = 'block';
+      result.className = 'alert alert-success';
+      result.innerHTML = `
+        <strong>Request submitted!</strong><br>
+        <div>Name: ${name}</div>
+        ${email ? `<div>Email: ${email}</div>` : ''}
+        <div>Art piece: ${chosenArt}</div>
+        ${notes ? `<div>Notes: ${notes}</div>` : ''}
+      `;
+
+      // Optionally clear the form (keep selection & preview)
+      // form.reset(); preview.src = select.value;
+    });
+  })();
+    </script>
+    </body>
+</html>
